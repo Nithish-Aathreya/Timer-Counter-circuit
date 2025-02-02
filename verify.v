@@ -47,17 +47,17 @@ always #41.6 clk = ~clk;
 
 initial
 begin
- #50 reset = 0;
+ #50 reset = 1'b0;
         
       
-        #20 tr = 1;
+        #20 tr = 1'b1;
         
         
         #500;
 
         
-        #20 c_t = 1;  
-        tr = 1;
+        #20 c_t = 1'b1;  
+        tr = 1'b1;
         
        
         repeat (10) begin
@@ -66,9 +66,9 @@ begin
         end
         
        
-        #20 gate = 1;
-        intx = 0;    
-        #100 intx = 1; 
+        #20 gate = 1'b1;
+        intx = 1'b0;    
+        #100 intx = 1'b1; 
         
         
         #500;
@@ -77,10 +77,7 @@ begin
         $stop;
 end
 
-   initial begin
-        $monitor("Time: %0t | c_t: %b | tr: %b | t_in: %b | gate: %b | int_in: %b | count: %b",
-                 $time, c_t, tr, cin, gate, intx, count);
-    end
+   
 
 endmodule
 
