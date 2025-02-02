@@ -1,11 +1,11 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
-// Engineer: 
+// Engineer: I am 
 // 
-// Create Date: 25.10.2024 19:25:42
+// Create Date: 
 // Design Name: 
-// Module Name: proj
+// Module Name: main
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,21 +20,40 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module proj(clk,timer,timer_run,gate,intx,y,select);
-input clk,timer,timer_run,gate,intx,select;
-output reg y;
+module main(clk,reset,gate,intx,tr,cin,c_t,count);
+input clk,reset,gate,intx,tr,cin,c_t;
+output reg [15:0] count;
 
-wire a; //OR gate output
-wire b; //AND gate output
-wire inp_drive; //MUX selective
-wire select; //MuX control line
-assign a = ~gate | intx;
+wire enable;
+reg [3:0] clk_div;
 
-assign b = timer_run & a;
+assign enable = tr & (gate ? intx:1'b1);
 
-assign inp_drive = select ? timer : clk; 
+always @(posedge clk or posedge reset) 
+begin
+if(reset == 1'b1)
+begin 
+count<=16'b0;
+clk_div<=4'b0;
+end
 
-                                               //select=0;counter                                                    //select=1;timer
-always @(posedge inp_drive)
-y = b;
+else if(enable==1'b1) 
+begin
+if(c_t==1'b0)
+begin
+clk_div=clk_div+1;
+if(clk_div==4'b11)
+begin
+count = count + 1;
+clk_div<=16'b0;
+end
+end
+else
+begin
+if(cin==1'b1)
+count<=count+1;
+end
+end
+end
 endmodule
+
